@@ -27,5 +27,5 @@
 @endif
 
 @foreach($post->comments as $comment)
-<div>$comment->user->fullname $comment->message</div>
+<div>{{{ $comment->user->fullname }}} {{{ $comment->message }}}</div>
 @endforeach

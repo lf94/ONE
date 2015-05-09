@@ -8,7 +8,7 @@ class Comment extends Eloquent {
      * @return A User object.
      */
     function user() {
-        return $this->hasOne('User');
+        return $this->belongsTo('User');
     }
     
     /**
@@ -16,7 +16,7 @@ class Comment extends Eloquent {
      * @return A Post object
      */
     function post() {
-        return $this->hasOne('Post');
+        return $this->belongsTo('Post');
     }
 }
 

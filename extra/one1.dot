@@ -1,0 +1,26 @@
+digraph ONE {
+	node [shape=none];
+	public [label="", image="public.png"]
+	register [label="", image="public_register.png"]
+	login_home [label="", image="public2.png"]
+	post [label="", image="public_post.png"]
+	user [label="", image="public_user.png"]
+
+	public -> register [label="GET /register"]
+	public -> login_home [label="POST /login [name]"]
+	public -> user [label="GET /user/{id}"]
+	register -> login_home [label="POST /register [name,profilePictureURL]"]
+	login_home -> user [label="GET /user/{id}"]
+	login_home -> post [label="POST /comment"]
+	login_home -> login_home [label="POST /post [title,message]"]
+
+	user -> public [label="POST /logout"]
+	user -> public [label="GET /"]
+	post -> public [label="POST /logout"]
+	post -> public [label="GET /"]
+
+	login_home -> public [label="POST /logout"]
+
+	public -> post [label="GET /post/{id}"]
+	login_home -> post [label="GET /post/{id}"]
+}

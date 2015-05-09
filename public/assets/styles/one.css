@@ -1,0 +1,57 @@
+body {
+    background-color: #f8f8f8;
+}
+
+.sidebar-paragraph {
+    text-align: justify;
+}
+
+.btn-img-navbar {
+    margin-right: 1em;
+    height: 23px;
+}
+
+.divider-vertical {
+    height: 1.5em;
+    border-right: 1px solid #E0E0E0;
+    width: 1px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.post {
+    
+}
+
+.profile-thumbnail {
+    max-width: 100%;
+    height: auto;
+}
+
+.post .modifiers {
+    float: right;
+}
+
+form.single {
+    display: inline;
+}
+
+.post .modifiers .icon {
+    padding: 0;
+}
+
+.post .modifiers .icon span {
+    font-size: 0.8em;
+}
+
+.poster {
+    text-align: center;
+}
+
+.comment-modifier .icon {
+    padding: 0;
+}
+
+.comment-modifier .icon span {
+    font-size: 0.8em;
+}

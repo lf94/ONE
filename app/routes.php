@@ -25,20 +25,11 @@ Route::post('/register', 'UserController@register');
 Route::get('/login', function() {
     return View::make('user/login');
 });
-Route::post('/login', "UserController@login");
 
-Route::get('/logout', "UserController@logout");
-
-
-
+Route::post('/login', array("as" => "user.login", "uses" => "UserController@login"));
+Route::get('/login', array("as" => "user.logout", "uses" => "UserController@logout"));
 
 Route::resource('post', 'PostController');
 Route::resource('comment', 'CommentController');
 Route::resource('user', 'UserController');
-
-
-
-
-
-
 ?>

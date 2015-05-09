@@ -10,7 +10,7 @@ ONE
 
 @section('sidebar')
 <div class="col-sm-3">
-    @if(empty($user))
+    @if(!Auth::check())
     <h3>What's going on...</h3>
     ONE now consists of <strong>{{{ $lastMember or '0' }}}</strong> people who have made <strong>{{{ $lastComment or '0' }}}</strong> comments to <strong>{{{ $lastPost or '0' }}}</strong> posts!
     @else

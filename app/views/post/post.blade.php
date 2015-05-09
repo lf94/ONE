@@ -10,7 +10,8 @@
 </div>
 
 <div class="col-sm-3 poster">
-    @if($post->user) User ID: {{$post->user->id}} @endif
+    <img class="img-thumbnail" src='{{{ $post->user->id }}}' width='128' height='128' title='N/A' alt='N/A'/>
+    <div><a href="{{ URL::route('user.show', $post->user->id) }}">{{{ $post->user->id }}}</a></div>
 </div>
 <div class="col-sm-9 message">
     <div class='title'><h3>{{{ $post->title }}}</h3></div>
@@ -24,3 +25,7 @@
 @else
 <div class="col-sm-12">No comments. <a href="" class="btn btn-link">Be the first.</a><br/></div>
 @endif
+
+@foreach($post->comments as $comment)
+<div>$comment->user->fullname $comment->message</div>
+@endforeach

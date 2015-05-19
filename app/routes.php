@@ -18,9 +18,9 @@ Route::get('/document', array('as' => 'documents.show', function(){
 }));
 
 Route::get('/register', function(){
-    return View::make('user/register');
+    return View::make('user/register')->withUser(new User());
 });
-Route::post('/register', 'UserController@register');
+Route::post('/register', array('as'=>'user.register','uses'=>'UserController@register'));
 
 Route::get('/login', function() {
     return View::make('user/login');

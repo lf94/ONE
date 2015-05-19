@@ -6,7 +6,7 @@ Editing a Post
 
 @section('content')
 <div class='col-sm-12'>
-    {{ Form::open(array('route' => array('post.update', $post->idPost), 'method' => 'put')) }}
+    {{ Form::model($post, array('route' => array('post.update', $post->id), 'method' => 'put')) }}
         @include('post/form')
         <input type="hidden" value="_put"/>
         <button class="btn btn-primary">Save</button><button class="btn btn-link">Cancel</button>

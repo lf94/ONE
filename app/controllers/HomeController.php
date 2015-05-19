@@ -7,6 +7,7 @@ class HomeController extends BaseController {
         $posts = Post::ViewableTo(Auth::user())->paginate(2); 
         
 		return View::make('home/home')
+			->with('formPost', new Post())
 			->withPosts($posts);
 	}
 

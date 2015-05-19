@@ -24,8 +24,10 @@ class Post extends Eloquent {
      * Determine if the post should be displayed, based on privacy settings, for this user.
      */
      function scopeViewableTo($query, $user) {
-    	$postsQuery = $query->where('privacy_setting','=','global'); 
-    	/*
+    	$postsQuery = $query
+    	    ->where('privacy_setting','=','public')
+    	    ->orWhere('privacy_setting','=','global'); 
+    	    
     	if(!empty($user)) {
         	$postsQuery
         	->orWhere(function($query) use ($user) {
@@ -42,8 +44,9 @@ class Post extends Eloquent {
     	    		->where('user_id', '=', Auth::user()->id);
         	});
     	}
-		*/
         return $postsQuery;
      }
+     
+     protected $fillable = array('user_id', 'title', 'message', 'privacy_setting');
 }
 ?>

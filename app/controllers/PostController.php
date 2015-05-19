@@ -35,38 +35,24 @@ class PostController extends \BaseController {
 	 */
 	public function store()
 	{
-		$user = Session::get('user');
+		$data = Input::all();
+		$title = $data['title'];
+		$message = $data['message'];
+		$privacy = $data['privacy'];
 		
-		$title = Input::get('title');
-		$message = Input::get('message');
-		$titleError = false;
-		$messageError = false;
-		$error = false;
-		
-		if(empty($title)) {
-			$titleError = true;
-			$error = true;
+		$validator = Validator::make($data, array(
+		    "title" => "required",
+		    "message" => "required",
+		    "privacy" => "required"
+	    ));
+	    
+		if($validator->fails()){
+			return Redirect::back()->withErrors($validator)->withInput();
 		}
 		
-		if(empty($message)) {
-			$messageError = true;
-			$error = true;
-		}
-		
-		if($error == true) {
-			return Redirect::to('/')
-				->with('postFormTitleError', $titleError)
-				->with('postFormMessageError', $messageError);
-		}
-		
-		
-		
-		$post = new Post();
-		// Nonsense will be fixed after we're able to use Eloquent.
-		$post->construct(NULL, $user->idUser, $title, $message);
-		$post->save();
-		
-		return Redirect::to('/');
+		Post::create(array('user_id' => Auth::user()->id, 'title' => $title, 'message' => $message, 'privacy_setting' => $privacy));
+			
+		return Redirect::to(URL::previous());
 	}
 
 
@@ -103,8 +89,7 @@ class PostController extends \BaseController {
 	public function edit($id)
 	{
 		$post = Post::find($id);
-		$user = Session::get('user');
-		return View::make('post/edit')->withPost($post)->withUser($user);
+		return View::make('post/edit')->withPost($post);
 	}
 
 
@@ -116,12 +101,30 @@ class PostController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		$user = Session::get('user');
-		$post = new Post();
-		$post->construct($id, $user->idUser, Input::get('title'), Input::get('message'));
+		$newPost = Input::all();
+		
+		$validator = Validator::make($newPost, array(
+		    "title" => "required",
+		    "message" => "required",
+		    "privacy" => "required"
+	    ));
+	    
+		if($validator->fails()){
+			return Redirect::back()->withErrors($validator)->withInput();
+		}
+		
+		$post = Post::find($id);
+	
+		if($post->user_id != Auth::user()->id) {
+			return Redirect::to('/');
+		}	
+		
+		$post->title = $newPost['title'];
+		$post->message = $newPost['message'];
+		$post->privacy_setting = $newPost['privacy'];
 		$post->update();
 		
-		return Redirect::to('/');
+		return Redirect::to("/post/$id");
 	}
 
 
@@ -133,13 +136,9 @@ class PostController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		// Delete all comments from the Post.
-		$comments = Post::find($id)->comments();
-		foreach($comments as $comment) {
-			Comment::delete($comment->idComment);
-		}
-		// Delete the post.
-		Post::delete($id);
+		$post = Post::find($id);
+		$post->comments()->delete();
+		$post->delete($id);
 		
 		return Redirect::to('/');
 	}

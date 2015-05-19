@@ -1,14 +1,15 @@
 <div class="form-group">
-    @if(!empty($postFormTitleError))
-        <div class="bg-danger">A title for your post is required.</div>
-    @endif
+    {{{ $errors->first('title') }}}<br/>
     <label for="title">Title:</label><br/>
-    <input type="text" id="title" class="form-control" name="title" placeholder="Title of post" value="{{{ $postFormData->Title or '' }}}"/>
+    {{ Form::text('title', $post->title, array('placeholder' => 'Title of post...', 'class'=>'form-control')) }}
 </div>
 <div class="form-group">
-    @if(!empty($postFormMessageError))
-        <div class="bg-danger">You need a message for your post.</div>
-    @endif
+    {{{ $errors->first('message') }}}<br/>
     <label for="message">Message:</label><br/>
-    <textarea id="message" class="form-control" name="message" placeholder="Enter new message...">{{{ $postFormData->Message or '' }}}</textarea>
+    {{ Form::text('message', $post->message, array('placeholder' => 'Enter your message!', 'class'=>'form-control')) }}
+</div>
+<div class="form-group">
+    {{{ $errors->first('privacy') }}}<br/>
+    <label for="privacy">Privacy:</label><br/>
+    {{ Form::select('privacy', array('public' => 'Public', 'friends' => 'Friends', 'private' => 'Private'), 'public', array('class'=>'form-control')) }}
 </div>

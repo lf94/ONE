@@ -11,13 +11,13 @@ ONE
 @section('sidebar')
 <div class="col-sm-3">
     @if(!Auth::check())
-    <h3>What's going on...</h3>
-    ONE now consists of <strong>{{{ $lastMember or '0' }}}</strong> people who have made <strong>{{{ $lastComment or '0' }}}</strong> comments to <strong>{{{ $lastPost or '0' }}}</strong> posts!
+        <h3>What's going on...</h3>
+        ONE now consists of <strong>{{{ $lastMember or '0' }}}</strong> people who have made <strong>{{{ $lastComment or '0' }}}</strong> comments to <strong>{{{ $lastPost or '0' }}}</strong> posts!
     @else
-    <form action="{{ URL::route('post.store') }}" method="post">
-        @include('post/form')
-        <button class="btn btn-primary">Post</button>
-    </form>
+        {{ Form::model($formPost, array('route' => array('post.store'))) }}
+            @include('post/form')
+            {{ Form::submit('Post', array('class'=>"btn btn-primary")) }}
+        {{ Form::close() }}
     @endif
 </div>
 @stop
@@ -45,6 +45,7 @@ ONE
 @forelse ($posts as $post)
 <div class="row post thumbnail">
     @include('post/post')
+    
 </div>
 @empty
     <div class="row thumbnail">
@@ -53,7 +54,12 @@ ONE
         </div>
     </div>
 @endforelse
+
+<div class="row">
+    <div class="col-xs-12">
+        {{ $posts->links() }}
+    </div>
+</div>
 </div>
 
-<div>{{ $posts->links() }}</div>
 @stop

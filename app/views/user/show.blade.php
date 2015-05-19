@@ -13,6 +13,20 @@
             <div><a href="{{ URL::route('user.show', $otherUser->id) }}">{{{ $otherUser->fullname }}}</a></div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-xs-12">
+            @if(Auth::check())
+            @if(!$isFriend)
+            {{ Form::open(array('route'=>array('user.friend', $otherUser->id),'method'=>'GET')) }}
+            {{ Form::submit('Friend', array('class'=>'btn btn-secondary')) }}
+            @else
+            {{ Form::open(array('route'=>array('user.unfriend', $otherUser->id),'method'=>'GET')) }}
+            {{ Form::submit('Unfriend', array('class'=>'btn btn-secondary')) }}
+            @endif
+            {{ Form::close() }}
+            @endif
+        </div>
+    </div>
 </div>
 @stop
 

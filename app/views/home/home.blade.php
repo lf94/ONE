@@ -14,7 +14,7 @@ ONE
         <h3>What's going on...</h3>
         ONE now consists of <strong>{{{ $lastMember or '0' }}}</strong> people who have made <strong>{{{ $lastComment or '0' }}}</strong> comments to <strong>{{{ $lastPost or '0' }}}</strong> posts!
     @else
-        {{ Form::model($formPost, array('route' => array('post.store'))) }}
+        {{ Form::model($post, array('route' => array('post.store'))) }}
             @include('post/form')
             {{ Form::submit('Post', array('class'=>"btn btn-primary")) }}
         {{ Form::close() }}

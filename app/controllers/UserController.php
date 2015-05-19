@@ -8,10 +8,39 @@ class UserController extends BaseController {
     public function show($id) {
         $user = User::find($id);
         
-       $posts = $user->posts()->ViewableTo(Auth::user())->get(); 
+       $postsQuery = $user->posts()->where('privacy_setting','=','public')->orWhere('privacy_setting','global'); 
+    	 
+    	if(!empty($user)) {
+        	$postsQuery = $postsQuery
+        	->orWhere(function($query) use ($user) {
+    	    		$query
+    	    		->where('privacy_setting','=','friends')
+    	    		->whereIn('user_id', $user->friends->lists('friend_id'));
+        	});
+    	}
+    	if(Auth::check()) {
+    	    $postsQuery = $postsQuery
+        	->orWhere(function($query) {
+        			$query
+    	    		->where('privacy_setting','=','private')
+    	    		->where('user_id', '=', Auth::user()->id);
+        	});
+    	}
+    	
+        $posts = $postsQuery->get();
        
+        $isFriend = false;
+        
+        if(Auth::check()) {
+            $friend = Friend::where('user_id', Auth::user()->id)->where('friend_id', $id)->count();
+            if($friend > 0) {
+                $isFriend = true;
+            }
+        }
+        
        return View::make('user/show')
            ->with('otherUser', $user)
+           ->with('isFriend', $isFriend)
            ->with('posts', $posts);
     }
     
@@ -72,7 +101,23 @@ class UserController extends BaseController {
     * Friend a user.
     */
     public function friend($id) {
-        Friend::create(array("user_id" => Auth::user()->id, "friend_id" => $id));
+        if(Auth::check()) {
+            $friend = Friend::where('user_id', Auth::user()->id)->where('friend_id',$id)->count();
+            
+            if($friend == 0) {
+                /* I tried with Friend::create(...), no go... */
+                
+                $friendObj = new Friend();
+                $friendObj->user_id = Auth::user()->id;
+                $friendObj->friend_id = $id;
+                $friendObj->save();
+                
+                $friendObj = new Friend();
+                $friendObj->friend_id = Auth::user()->id;
+                $friendObj->user_id = $id;
+                $friendObj->save();
+            }
+        }
         return Redirect::to(URL::previous());
     }
     
@@ -80,7 +125,16 @@ class UserController extends BaseController {
     * Unfriend a user.
     */
     public function unfriend($id) {
-        Friend::find($id);
+        if(Auth::check()) {
+           $friend = Friend::where('user_id', Auth::user()->id)->where('friend_id', $id);
+           
+           $isFriend = $friend->count(); 
+            if($isFriend > 0) {
+                $friend->delete();
+                $friend = Friend::where('friend_id', Auth::user()->id)->where('user_id', $id);
+                $friend->delete();
+            }
+        } 
         return Redirect::to(URL::previous());
     }
    

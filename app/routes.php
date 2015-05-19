@@ -26,9 +26,9 @@ Route::get('/login', function() {
     return View::make('user/login');
 });
 
-Route::post('/login', array("as" => "user.login", "uses" => "UserController@login"));
-Route::get('/logout', array("as" => "user.logout", "uses" => "UserController@logout"));
-Route::get('/search/{name}', array("as" => "user.search", "uses" => "UserController@search"));
+Route::post('login', array("as" => "user.login", "uses" => "UserController@login"));
+Route::get('logout', array("as" => "user.logout", "uses" => "UserController@logout"));
+Route::post('search/users', array("as" => "user.search", "uses" => "UserController@search"));
 
 Route::resource('post', 'PostController');
 Route::resource('comment', 'CommentController');

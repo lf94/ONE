@@ -7,7 +7,9 @@ class UserController extends BaseController {
      */
     public function show($id) {
         $user = User::find($id);
-       $posts = Post::ViewableTo(Auth::user())->get(); 
+        
+       $posts = $user->posts()->ViewableTo(Auth::user())->get(); 
+       
        return View::make('user/show')
            ->with('otherUser', $user)
            ->with('posts', $posts);
@@ -38,7 +40,6 @@ class UserController extends BaseController {
 		
 		Session::forget('login_error');
 	
-	/*	
 		$validator = Validator::make($data, array(
 		    "email" => "required",
 		    "password" => "required"
@@ -47,7 +48,7 @@ class UserController extends BaseController {
 	    if($validator->fails()) {
 			return Redirect::to(URL::previous());
 	    } 
-	 */   
+	    
 		$success = Auth::attempt(array('email' => $email, 'password' => $password), true);
 		
 		if($success) {
@@ -81,5 +82,14 @@ class UserController extends BaseController {
     public function unfriend($id) {
         Friend::find($id);
         return Redirect::to(URL::previous());
+    }
+   
+   /**
+    * Search for users.
+    */
+    public function search() {
+        $name = Input::get('person-name');
+        $users = User::where('fullname', 'LIKE', "%$name%")->get();
+        return View::make('user/list')->withUsers($users);
     }
 }

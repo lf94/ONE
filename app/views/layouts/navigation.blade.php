@@ -11,7 +11,7 @@
         </div>
         <div class="collapse navbar-collapse" id="one-nav-collapse">
             <form class="nav navbar-nav navbar-form navbar-left" action="{{ URL::route('user.search') }}" method="post">
-                {{ Form::text('search', '', array('class' => 'form-control', 'placeholder' => 'Search for people...')) }}
+                {{ Form::text('person-name', '', array('class' => 'form-control', 'placeholder' => 'Search for people...')) }}
                 {{ Form::submit('Search', array('class' => 'btn btn-secondary')) }}
             </form>
             <ul class="nav navbar-nav navbar-right">

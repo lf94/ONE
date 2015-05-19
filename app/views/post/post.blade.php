@@ -1,17 +1,17 @@
 <div class="modifiers">
     @if(Auth::check())
     @if($post->user_id == Auth::user()->id)
-    {{ Form::open(array('route' => array('post.destroy', $post->id), 'method' => 'delete', 'class' => 'single')) }}
-    <button class="btn btn-link icon"><span class="glyphicon glyphicon-trash"></span></button>
-    {{ Form::close() }}
-    <a class="btn btn-link icon" href="{{ URL::route('post.edit', $post->id) }}"><span class="glyphicon glyphicon-pencil"></span></a>
+        {{ Form::open(array('route' => array('post.destroy', $post->id), 'method' => 'delete', 'class' => 'single')) }}
+            <button class="btn btn-link icon"><span class="glyphicon glyphicon-trash"></span></button>
+        {{ Form::close() }}
+        <a class="btn btn-link icon" href="{{ URL::route('post.edit', $post->id) }}"><span class="glyphicon glyphicon-pencil"></span></a>
     @endif
     @endif
 </div>
-
+<div class="col-sm-12">{{{ $post->privacy_setting }}}</div>
 <div class="col-sm-3 poster">
-    <img class="img-thumbnail" src='{{{ $post->user->id }}}' width='128' height='128' title='N/A' alt='N/A'/>
-    <div><a href="{{ URL::route('user.show', $post->user->id) }}">{{{ $post->user->id }}}</a></div>
+    <img class="img-thumbnail" src='{{{ $post->user->profile_image }}}' width='128' height='128' title='N/A' alt='N/A'/>
+    <div><a href="{{ URL::route('user.show', $post->user->id) }}">{{{ $post->user->fullname }}}</a></div>
 </div>
 <div class="col-sm-9 message">
     <div class='title'><h3>{{{ $post->title }}}</h3></div>
@@ -26,6 +26,26 @@
 <div class="col-sm-12">No comments. <a href="" class="btn btn-link">Be the first.</a><br/></div>
 @endif
 
-@foreach($post->comments as $comment)
-<div>{{{ $comment->user->fullname }}} {{{ $comment->message }}}</div>
-@endforeach
+@forelse($post->comments as $comment)
+    <div class="col-sm-11 comment">
+        <a href="{{ URL::to('/user/'.$comment->user->id) }}">{{{ $comment->user->fullname }}}</a> says: {{{ $comment->message }}}
+    </div>
+    <div class="col-sm-1 comment-modifier">
+    @if(Auth::check())
+    @if($comment->user_id == Auth::user()->id)
+    {{ Form::open(array('route' => array('comment.destroy', $comment->id), 'method' => 'delete', 'class' => 'single')) }}
+        <input type="hidden" name="idPost" id="idPost" value="{{ $comment->post_id }}"/>
+        <button class="btn btn-link icon"><span class="glyphicon glyphicon-trash"></span></button>
+    {{ Form::close() }}
+    @endif
+    @endif
+    </div>
+@empty
+    <div class="col-sm-12"><br/></div>
+@endforelse
+
+<div class="row">
+    <div class="col-sm-12 comment-form">
+       @include('comment/form')
+    </div>
+</div>

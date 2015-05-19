@@ -6,22 +6,11 @@ class UserController extends BaseController {
      * Show a user's profile page.
      */
     public function show($id) {
-        $otherUser = User::find($id);
-        $postsArray = DB::select('SELECT * FROM Post WHERE idUser = ?;', array($otherUser->idUser));
-        $postComments = DB::select('SELECT DISTINCT Post.idPost, Post.idUser, Post.Title, Post.Message FROM Post, Comment WHERE (Post.idPost = Comment.idPost AND Comment.idUser = ?) OR (Post.idUser = ?);', array($otherUser->idUser, $otherUser->idUser));
-        
-        $postsArray = $postComments;
-        $postsObjects = array();
-        
-        foreach($postsArray as $post) {
-            $postsObjects[] = Post::to($post);
-        }
-        
-        $postsObjects = array_reverse($postsObjects);
-        
-        return View::make('user/show')
-            ->with('otherUser', $otherUser)
-            ->with('posts', $postsObjects);
+        $user = User::find($id);
+       $posts = Post::ViewableTo(Auth::user())->get(); 
+       return View::make('user/show')
+           ->with('otherUser', $user)
+           ->with('posts', $posts);
     }
     
     /**
@@ -44,10 +33,12 @@ class UserController extends BaseController {
      */
     public function login() {
 		$data = Input::all();
-		$username = $data['email'];
+		$email = $data['email'];
 		$password = $data['password'];
-		Session::forget('login_error');
 		
+		Session::forget('login_error');
+	
+	/*	
 		$validator = Validator::make($data, array(
 		    "email" => "required",
 		    "password" => "required"
@@ -56,8 +47,8 @@ class UserController extends BaseController {
 	    if($validator->fails()) {
 			return Redirect::to(URL::previous());
 	    } 
-	    
-		$success = Auth::attempt(compact('email', 'password'));
+	 */   
+		$success = Auth::attempt(array('email' => $email, 'password' => $password), true);
 		
 		if($success) {
 			return Redirect::to(URL::previous());
@@ -74,5 +65,21 @@ class UserController extends BaseController {
     public function logout() {
 		Auth::logout();
 		return Redirect::route('home.home');
+    }
+   
+   /**
+    * Friend a user.
+    */
+    public function friend($id) {
+        Friend::create(array("user_id" => Auth::user()->id, "friend_id" => $id));
+        return Redirect::to(URL::previous());
+    }
+    
+   /**
+    * Unfriend a user.
+    */
+    public function unfriend($id) {
+        Friend::find($id);
+        return Redirect::to(URL::previous());
     }
 }

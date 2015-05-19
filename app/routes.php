@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'HomeController@home');
+Route::get('/', array('as' => 'home.home', 'uses'=>'HomeController@home'));
 
 Route::get('/document', array('as' => 'documents.show', function(){
     return View::make('document/index');
@@ -27,7 +27,8 @@ Route::get('/login', function() {
 });
 
 Route::post('/login', array("as" => "user.login", "uses" => "UserController@login"));
-Route::get('/login', array("as" => "user.logout", "uses" => "UserController@logout"));
+Route::get('/logout', array("as" => "user.logout", "uses" => "UserController@logout"));
+Route::get('/search/{name}', array("as" => "user.search", "uses" => "UserController@search"));
 
 Route::resource('post', 'PostController');
 Route::resource('comment', 'CommentController');

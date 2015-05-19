@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-sm-12 poster">
             <img class="img-rounded profile-thumbnail" src='{{{ $otherUser->ProfilePictureURL }}}' title='N/A' alt='N/A'/>
-            <div><a href="{{ URL::route('user.show', $otherUser->idUser) }}">{{{ $otherUser->Name }}}</a></div>
+            <div><a href="{{ URL::route('user.show', $otherUser->id) }}">{{{ $otherUser->fullname }}}</a></div>
         </div>
     </div>
 </div>

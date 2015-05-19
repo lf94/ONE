@@ -54,4 +54,6 @@ ONE
     </div>
 @endforelse
 </div>
+
+<div>{{ $posts->links() }}</div>
 @stop

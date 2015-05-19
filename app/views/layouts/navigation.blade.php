@@ -10,6 +10,10 @@
             <span class="navbar-brand"><a href="{{ URL::asset('/') }}">ONE</a></span>
         </div>
         <div class="collapse navbar-collapse" id="one-nav-collapse">
+            <form class="nav navbar-nav navbar-form navbar-left" action="{{ URL::route('user.search') }}" method="post">
+                {{ Form::text('search', '', array('class' => 'form-control', 'placeholder' => 'Search for people...')) }}
+                {{ Form::submit('Search', array('class' => 'btn btn-secondary')) }}
+            </form>
             <ul class="nav navbar-nav navbar-right">
                 @yield('nav-items')
                 
@@ -29,12 +33,12 @@
                     </li>
                 @else
                 <li>
-                    <a class="" href="{{ URL::route('user.show', Auth::user()->user_id) }}">
+                    <a class="" href="{{ URL::route('user.show', Auth::user()->id) }}">
                         <img class="btn-img-navbar img-rounded" src="{{{ Auth::user()->profile_image }}}"/>{{{ Auth::user()->fullname }}}
                     </a>
                 </li>
                 <li class="hidden-xs divider-vertical"></li>
-                <li><a href="{{ URL::to('/logout') }}">Logout</a></li>
+                <li><a href="{{ URL::route('user.logout') }}">Logout</a></li>
                 @endif
             </ul>
         </div>

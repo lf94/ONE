@@ -1,8 +1,11 @@
 <?php
+
+use Illuminate\Support\Collection;
+
 class HomeController extends BaseController {
 	public function home() {
-		$posts = Post::all(); 
-		
+        $posts = Post::ViewableTo(Auth::user())->paginate(2); 
+        
 		return View::make('home/home')
 			->withPosts($posts);
 	}

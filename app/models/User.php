@@ -26,6 +26,18 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 	
+	public static $rules = array(
+		'email'=>'required|email|unique:users',
+		'password'=>'required',
+		'fullname'=>'required',
+		'dob'=>'required|date'
+	);
+	
+	public static $directory = '/uploads/users';
+	public static $profilePicture = 'profile-picture';
+	
+	protected $fillable = array('email','password','fullname','date_of_birth','profile_image');
+	
 	public function friends() {
 		return $this->hasMany('Friend');	
 	}

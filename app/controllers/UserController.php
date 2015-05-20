@@ -48,15 +48,34 @@ class UserController extends BaseController {
      * Register a user.
      */
     public function register() {
-        $user = new User();
-        $user->construct(NULL, Input::get('name'), Input::get('profile-picture-url'));
-        $user->save();
+       $data = Input::all();
+       $validator = Validator::make($data, User::$rules);
+       
+       if($validator->passes()) {
+       
+        $filename = "na.png";
         
-        $user->idUser = User::last();
+        if(Input::hasFile('profile-picture')) {
+            $image = Input::file('profile-picture');
+            
+            $uploadDirectory = public_path().User::$directory.'/'.$data['email'];
+            $filename = $image->getClientOriginalName();
+            File::makeDirectory($uploadDirectory, $mode=0755, $recursive=true);
+            $image->move($uploadDirectory, $filename);
+        }
         
-        Session::put('user', $user);
+        User::create(array(
+            'email'=>$data['email'], 
+            'password'=>Hash::make($data['password']),
+            'fullname'=>$data['fullname'],
+            'date_of_birth'=>$data['dob'],
+            'profile_image'=>$filename
+        ));
         
         return Redirect::to("/");
+       }
+      
+        return Redirect::back()->withErrors($validator)->withInput();
     }
     
     /**
@@ -69,10 +88,7 @@ class UserController extends BaseController {
 		
 		Session::forget('login_error');
 	
-		$validator = Validator::make($data, array(
-		    "email" => "required",
-		    "password" => "required"
-	    ));
+		$validator = Validator::make($data, User::$rules);
 	    
 	    if($validator->fails()) {
 			return Redirect::to(URL::previous());

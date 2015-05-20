@@ -12,9 +12,11 @@
             <img class="img-rounded profile-thumbnail" src='/2503ict-assign2/public/uploads/users/{{{ $otherUser->email }}}/{{{ $otherUser->profile_image }}}' title='N/A' alt='N/A'/>
             <div><h1><a href="{{ URL::route('user.show', $otherUser->id) }}">{{{ $otherUser->fullname }}}</a></h1></div>
         </div>
+        @if(Auth::check())
         <div class="col-sm-12 text-center">
             <h3>Born: {{{ $otherUser->date_of_birth }}}</h3>
         </div>
+        @endif
     </div>
     <div class="row">
         <div class="col-xs-12">

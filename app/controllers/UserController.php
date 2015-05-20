@@ -8,26 +8,32 @@ class UserController extends BaseController {
     public function show($id) {
         $user = User::find($id);
         
-       $postsQuery = $user->posts()->where('privacy_setting','=','public')->orWhere('privacy_setting','global'); 
-    	 
-    	if(!empty($user)) {
-        	$postsQuery = $postsQuery
-        	->orWhere(function($query) use ($user) {
-    	    		$query
-    	    		->where('privacy_setting','=','friends')
-    	    		->whereIn('user_id', $user->friends->lists('friend_id'));
-        	});
-    	}
-    	if(Auth::check()) {
-    	    $postsQuery = $postsQuery
-        	->orWhere(function($query) {
-        			$query
-    	    		->where('privacy_setting','=','private')
-    	    		->where('user_id', '=', Auth::user()->id);
-        	});
-    	}
+       $postsQuery = $user->posts()->where(function($query) use ($user) {
+           $query = $query->where('privacy_setting','=','global')->orWhere('privacy_setting','global'); 
+           
+        	if(!empty($user)) {
+            	$query = $query
+            	->orWhere(function($query) use ($user) {
+        	    		$query
+        	    		->where('privacy_setting','=','friends')
+        	    		->whereIn('user_id', $user->friends->lists('friend_id'));
+            	});
+        	}
+        	
+        	if(Auth::check()) {
+        	    $query = $query
+            	->orWhere(function($query) {
+            			$query
+        	    		->where('privacy_setting','=','private')
+        	    		->where('user_id', '=', Auth::user()->id);
+            	});
+        	}
+       });
     	
         $posts = $postsQuery->get();
+        $querylog = DB::getQueryLog();
+        //Uncomment to see the SQL
+        //dd(end($querylog));
        
         $isFriend = false;
         
@@ -43,6 +49,45 @@ class UserController extends BaseController {
            ->with('isFriend', $isFriend)
            ->with('posts', $posts);
     }
+    
+    
+	public function edit($id)
+	{
+		return View::make('user/edit')->withUser(Auth::user());
+	}
+	
+	public function update($id) {
+	    if($id != Auth::user()->id) {
+	        return Redirect::back();
+	    } 
+	    
+	    $data = Input::all();
+	    $validator = Validator::make($data, User::$updateRules);
+	    if($validator->passes()) {
+	        $filename = "na.png";
+	        
+            if(Input::hasFile('profile-picture')) {
+                $image = Input::file('profile-picture');
+                
+                $uploadDirectory = public_path().User::$directory.'/'.$data['email'];
+                $filename = $image->getClientOriginalName();
+                File::makeDirectory($uploadDirectory, $mode=0755, $recursive=true);
+                $image->move($uploadDirectory, $filename);
+            }
+            
+	        if(Input::has('fullname')) { Auth::user()->fullname = $data['fullname']; }
+	        if(Input::has('email')) { Auth::user()->email = $data['email']; }
+	        if(Input::has('password')) { Auth::user()->password = Hash::make($data['password']); }
+	        if(Input::has('dob')) { Auth::user()->date_of_birth = $data['dob']; }
+	        
+	        Auth::user()->profile_image = $filename;
+	        
+	        Auth::user()->save();
+	        return Redirect::to('/user/'.Auth::user()->id);
+	    }
+	    
+	    return Redirect::back()->withErrors($validator)->withInput();
+	}
     
     /**
      * Register a user.
@@ -88,7 +133,7 @@ class UserController extends BaseController {
 		
 		Session::forget('login_error');
 	
-		$validator = Validator::make($data, User::$rules);
+		$validator = Validator::make($data, User::$loginRules);
 	    
 	    if($validator->fails()) {
 			return Redirect::to(URL::previous());
@@ -111,6 +156,16 @@ class UserController extends BaseController {
     public function logout() {
 		Auth::logout();
 		return Redirect::route('home.home');
+    }
+    
+    
+    /**
+     * Show a list of this user's friends.
+     */
+    public function friends($id) {
+        $user = User::find($id);
+        $friends = User::whereIn('id', $user->friends()->lists('friend_id'))->get();
+        return View::make('user/list')->withUsers($friends);
     }
    
    /**

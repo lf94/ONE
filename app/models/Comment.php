@@ -18,6 +18,13 @@ class Comment extends Eloquent {
     function post() {
         return $this->belongsTo('Post');
     }
+    
+    public static $rules = [
+        "post_id"=>"required",
+        'message'=>'required'
+    ];
+    
+    protected $fillable = ["post_id","user_id","message"];
 }
 
 ?>

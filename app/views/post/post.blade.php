@@ -20,13 +20,17 @@
 
 <div class="col-sm-12"><hr/></div>
 
+@if(!isset($isViewingPost))
 @if($post->comments()->count() > 0)
-<div class="col-sm-12 comments"><a href="{{ URL::route('post.show', $post->id) }}">View {{{ $post->comments()->count() }}} comments</a></div>
+<div class="col-sm-12 comments"><a href="{{ URL::route('post.show', $post->id) }}">View {{{ $post->comments()->count() }}} comments</a><br/></div>
 @else
 <div class="col-sm-12">No comments. <a href="" class="btn btn-link">Be the first.</a><br/></div>
 @endif
+@endif
 
-@forelse($post->comments as $comment)
+@if(isset($isViewingPost))
+<div class="row">
+@forelse($comments as $comment)
     <div class="col-sm-11 comment">
         <a href="{{ URL::to('/user/'.$comment->user->id) }}">{{{ $comment->user->fullname }}}</a> says: {{{ $comment->message }}}
     </div>
@@ -34,7 +38,6 @@
     @if(Auth::check())
     @if($comment->user_id == Auth::user()->id)
     {{ Form::open(array('route' => array('comment.destroy', $comment->id), 'method' => 'delete', 'class' => 'single')) }}
-        <input type="hidden" name="idPost" id="idPost" value="{{ $comment->post_id }}"/>
         <button class="btn btn-link icon"><span class="glyphicon glyphicon-trash"></span></button>
     {{ Form::close() }}
     @endif
@@ -43,9 +46,19 @@
 @empty
     <div class="col-sm-12"><br/></div>
 @endforelse
+</div>
+
+<br/>
 
 <div class="row">
     <div class="col-sm-12 comment-form">
        @include('comment/form')
     </div>
 </div>
+
+<div class="row">
+       <div class="col-sm-12"> 
+    {{ $comments->links() }}
+    </div>
+</div>
+@endif

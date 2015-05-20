@@ -14,7 +14,7 @@
         </div>
         @if(Auth::check())
         <div class="col-sm-12 text-center">
-            <h3>Born: {{{ $otherUser->date_of_birth }}}</h3>
+            <h3>Born: {{{ date("D M Y", strtotime($otherUser->date_of_birth)) }}}</h3>
         </div>
         @endif
     </div>

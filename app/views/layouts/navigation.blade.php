@@ -34,8 +34,14 @@
                 @else
                 <li>
                     <a class="" href="{{ URL::route('user.show', Auth::user()->id) }}">
-                        <img class="btn-img-navbar img-rounded" src="{{{ Auth::user()->profile_image }}}"/>{{{ Auth::user()->fullname }}}
+            <img class="img-rounded btn-img-navbar" src='/2503ict-assign2/public/uploads/users/{{{ Auth::user()->email }}}/{{{ Auth::user()->profile_image }}}' title='N/A' alt='N/A'/> {{{ Auth::user()->fullname }}}
                     </a>
+                </li>
+                <li>
+                    <a class="" href="{{ URL::route('user.edit', Auth::user()->id) }}"><span class="glyphicon glyphicon-cog"></span></a>
+                </li>
+                <li>
+                    <a href="{{ URL::route('user.friends', Auth::user()->id) }}"><span class="glyphicon glyphicon-user"></span></a>
                 </li>
                 <li class="hidden-xs divider-vertical"></li>
                 <li><a href="{{ URL::route('user.logout') }}">Logout</a></li>

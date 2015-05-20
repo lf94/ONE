@@ -31,20 +31,17 @@ class CommentController extends \BaseController {
 	 */
 	public function store()
 	{
-		$user = Session::get('user');
-		$idPost = Input::get('idPost');
-		$message = Input::get('message');
-		$commentError = false;
+	
+		$data = Input::all();
 		
-		if(empty($message)) {
-			$commentError = true;
-		} else {
-			$comment = new Comment();
-			$comment->construct(NULL, $user->idUser, $message, $idPost);
-			$comment->save();
+		$validator = Validator::make($data, Comment::$rules);
+		
+		if($validator->passes()) {
+			Comment::create(["post_id"=>$data['post_id'], 'user_id'=>Auth::user()->id,'message'=>$data['message']]);
+			return Redirect::to("/post/{$data['post_id']}");
 		}
 		
-		return Redirect::to("/post/$idPost")->with('commentError', $commentError);
+		return Redirect::back()->withErrors($validator)->withInput();
 	}
 
 
@@ -92,10 +89,17 @@ class CommentController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		$idPost = Input::get('idPost');
+		$comment = Comment::find($id);
+		if(empty($comment)) {
+			return Redirect::back();
+		}	
 		
-		Comment::delete($id);
-		return Redirect::to("/post/$idPost");
+		if($comment->user_id != Auth::user()->id) {
+			return Redirect::back();
+		}
+		
+		Comment::destroy($id);
+		return Redirect::back();
 	}
 
 

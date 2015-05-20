@@ -33,6 +33,16 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		'dob'=>'required|date'
 	);
 	
+	public static $loginRules = [
+		'email'=>'required|email',
+		'password'=>'required'
+	];
+	
+	public static $updateRules = [
+		'email'=>'email',
+		'dob'=>'date'
+	];
+	
 	public static $directory = '/uploads/users';
 	public static $profilePicture = 'profile-picture';
 	

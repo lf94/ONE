@@ -28,5 +28,11 @@ class Post extends Eloquent {
      }
      
      protected $fillable = array('user_id', 'title', 'message', 'privacy_setting');
+     
+     public static $rules = [
+		    "title" => "required",
+		    "message" => "required",
+		    "privacy" => "required"
+		   ];
 }
 ?>

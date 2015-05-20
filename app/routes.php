@@ -30,6 +30,7 @@ Route::post('login', array("as" => "user.login", "uses" => "UserController@login
 Route::get('logout', array("as" => "user.logout", "uses" => "UserController@logout"));
 Route::post('search/users', array("as" => "user.search", "uses" => "UserController@search"));
 
+Route::get('user/{id}/friends', array("as" => "user.friends", "uses" => "UserController@friends"));
 Route::get('user/friend/{id}', array("as" => "user.friend", "uses" => "UserController@friend"));
 Route::get('user/unfriend/{id}', array("as" => "user.unfriend", "uses" => "UserController@unfriend"));
 

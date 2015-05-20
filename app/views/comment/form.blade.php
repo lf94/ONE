@@ -1,13 +1,9 @@
-@if(isset($user))
+@if(Auth::check())
 {{ Form::open(array('route' => array('comment.store'))) }}
-    @if(isset($commentError))
-    @if($commentError)
-        <div class="bg-danger">Your comment was empty.</div>
-    @endif
-    @endif
+    {{{ $errors->first('message') }}}
     <div class="input-group">
         <input type="text" class="form-control" name="message" id="message" placeholder="Type your comment..."/>
-        <input type="hidden" name="idPost" id="idPost" value="{{{ $post->idPost }}}"/>
+        <input type="hidden" name="post_id" id="idPost" value="{{{ $post->id }}}"/>
         <span class="input-group-btn">
             <button class="btn btn-secondary">Post</button>
         </span>

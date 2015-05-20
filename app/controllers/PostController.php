@@ -40,11 +40,7 @@ class PostController extends \BaseController {
 		$message = $data['message'];
 		$privacy = $data['privacy'];
 		
-		$validator = Validator::make($data, array(
-		    "title" => "required",
-		    "message" => "required",
-		    "privacy" => "required"
-	    ));
+		$validator = Validator::make($data, Post::$rules);
 	    
 		if($validator->fails()){
 			return Redirect::back()->withErrors($validator)->withInput();
@@ -65,17 +61,12 @@ class PostController extends \BaseController {
 	public function show($id)
 	{
 		$post = Post::find($id);
-		$user = Session::get('user');
-		$commentError = Session::get('commentError');
-		if(empty($commentError)) {
-			$commentError = false;
-		}
 		
 		return View::make('post/show')
 			->withPost($post)
-			->withComments($post->comments())
-			->withUser($user)
+			->withComments($post->comments()->orderBy('created_at', 'desc')->paginate(8))
 			->with('viewing', true)
+            ->with('isViewingPost','')
 			->with('commentError', $commentError);
 	}
 
@@ -103,11 +94,7 @@ class PostController extends \BaseController {
 	{
 		$newPost = Input::all();
 		
-		$validator = Validator::make($newPost, array(
-		    "title" => "required",
-		    "message" => "required",
-		    "privacy" => "required"
-	    ));
+		$validator = Validator::make($newPost, Post::$rules);
 	    
 		if($validator->fails()){
 			return Redirect::back()->withErrors($validator)->withInput();

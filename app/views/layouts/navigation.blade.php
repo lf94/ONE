@@ -29,8 +29,10 @@
                             <input type="password" id="password" name="password" class="form-control" placeholder="Password"/>
                             </div>
                             <input type="submit" class="btn btn-primary" value="Login"/>
+                            <a href="{{ URL::to('register') }}" class="btn btn-default ">Register</a>
                         </form>
                     </li>
+                    
                 @else
                 <li>
                     <a class="" href="{{ URL::route('user.show', Auth::user()->id) }}">

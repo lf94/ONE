@@ -87,7 +87,6 @@ class UserController extends BaseController {
             $uploadDirectory = public_path().User::$directory.'/'.$data['email'];
             $filename = $image->getClientOriginalName();
             if(!File::exists($uploadDirectory)) {
-                dd($uploadDirectory);
                 File::makeDirectory($uploadDirectory, $mode=0755, $recursive=true);
             }
             $image->move($uploadDirectory, $filename);
@@ -115,12 +114,10 @@ class UserController extends BaseController {
 		$email = $data['email'];
 		$password = $data['password'];
 		
-		Session::forget('login_error');
-	
 		$validator = Validator::make($data, User::$loginRules);
 	    
 	    if($validator->fails()) {
-			return Redirect::to(URL::previous());
+			return Redirect::route('user.login')->withErrors($validator)->withInput();
 	    } 
 	    
 		$success = Auth::attempt(array('email' => $email, 'password' => $password), true);
@@ -129,9 +126,7 @@ class UserController extends BaseController {
 			return Redirect::to(URL::previous());
 		}
 		
-		Session::put('login_error', 'Login failed.');
-		
-		return Redirect::route('home.home');
+		return Redirect::route('user.login');
     }
     
     /**

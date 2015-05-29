@@ -1,7 +1,7 @@
 @extends('layouts/master')
 
 @section('title')
-Registration
+Login
 @stop
 
 @section('nav-items')
@@ -11,17 +11,18 @@ Registration
 @stop
 
 @section('content')
-@if(isset($error))
-<p class="bg-danger">Name was mistyped or doesn't exist. Try again.</p>
-@endif
 <div class="col-sm-12">
-<form action="{{ URL::to('/login') }}" method="post">
+{{ Form::model($user, array('route'=>'user.login', 'files'=>'true')) }}
     <div class="form-group">
-        <label for="name">Name: </label>
+        <label for="name">Name: {{{ $errors->first('name') }}}</label>
         <input type="text" name="name" class="form-control" placeholder="Enter your account's name here"/>
+    </div>
+    <div class="form-group">
+        <label for="passowrd">Password: {{{ $errors->first('name') }}}</label>
+        <input type="password" name="password" class="form-control" placeholder=""/>
     </div>
     <input type="submit" class="btn btn-primary" value="Login"/>
     <a href="{{ URL::asset('/') }}">Cancel</a>
-</form>
+{{ Form::close() }}
 </div>
 @stop

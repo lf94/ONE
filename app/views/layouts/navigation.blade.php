@@ -21,16 +21,16 @@
                 
                 @if (!Auth::check())
                     <li>
-                        <form class="navbar-form navbar-left" action="{{ URL::route('user.login') }}" method="post">
+                        {{ Form::open(array('route' => 'user.login', 'class'=>'navbar-form navbar-left', 'method'=>'post')) }}
                             <div class="form-group">
-                            <input type="text" id="email" name="email" class="form-control" placeholder="Enter your email"/>
+                                {{ Form::text('email', '', array('placeholder' => 'Enter your email', 'class' => 'form-control')) }}
                             </div>
                             <div class="form-group">
-                            <input type="password" id="password" name="password" class="form-control" placeholder="Password"/>
+                                {{ Form::password('password', array('placeholder' => 'Password', 'class' => 'form-control')) }}
                             </div>
                             <input type="submit" class="btn btn-primary" value="Login"/>
                             <a href="{{ URL::to('register') }}" class="btn btn-default ">Register</a>
-                        </form>
+                        {{ Form::close() }}
                     </li>
                     
                 @else

@@ -1,60 +1,13 @@
 <?php
 class CommentTableSeeder extends Seeder {
     public function run() {
+        $faker = Faker\Factory::create();
+       
+       for($i = 0; $i < 10; $i++) 
         Comment::create(array(
         "user_id" => 1,
         "post_id" => 1,
-        "message" => "oh hey george"
-        ));
-        Comment::create(array(
-        "user_id" => 1,
-        "post_id" => 1,
-        "message" => "oh hey george"
-        ));
-        Comment::create(array(
-        "user_id" => 1,
-        "post_id" => 1,
-        "message" => "oh hey george"
-        ));
-        Comment::create(array(
-        "user_id" => 1,
-        "post_id" => 1,
-        "message" => "oh hey george"
-        ));
-        Comment::create(array(
-        "user_id" => 1,
-        "post_id" => 1,
-        "message" => "oh hey george"
-        ));
-        Comment::create(array(
-        "user_id" => 1,
-        "post_id" => 1,
-        "message" => "oh hey george"
-        ));
-        Comment::create(array(
-        "user_id" => 1,
-        "post_id" => 1,
-        "message" => "oh hey george"
-        ));
-        Comment::create(array(
-        "user_id" => 1,
-        "post_id" => 1,
-        "message" => "oh hey george"
-        ));
-        Comment::create(array(
-        "user_id" => 1,
-        "post_id" => 1,
-        "message" => "oh hey george"
-        ));
-        Comment::create(array(
-        "user_id" => 1,
-        "post_id" => 1,
-        "message" => "oh hey george"
-        ));
-        Comment::create(array(
-        "user_id" => 1,
-        "post_id" => 1,
-        "message" => "oh bye george"
+        "message" => $faker->text(50)
         ));
     }
 }

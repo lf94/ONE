@@ -66,8 +66,7 @@ class PostController extends \BaseController {
 			->withPost($post)
 			->withComments($post->comments()->orderBy('created_at', 'desc')->paginate(8))
 			->with('viewing', true)
-            ->with('isViewingPost','')
-			->with('commentError', $commentError);
+            ->with('isViewingPost','');
 	}
 
 

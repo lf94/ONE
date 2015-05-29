@@ -8,32 +8,11 @@ class UserController extends BaseController {
     public function show($id) {
         $user = User::find($id);
         
-       $postsQuery = $user->posts()->where(function($query) use ($user) {
-           $query = $query->where('privacy_setting','=','global')->orWhere('privacy_setting','global'); 
-           
-        	if(!empty($user)) {
-            	$query = $query
-            	->orWhere(function($query) use ($user) {
-        	    		$query
-        	    		->where('privacy_setting','=','friends')
-        	    		->whereIn('user_id', $user->friends->lists('friend_id'));
-            	});
-        	}
-        	
-        	if(Auth::check()) {
-        	    $query = $query
-            	->orWhere(function($query) {
-            			$query
-        	    		->where('privacy_setting','=','private')
-        	    		->where('user_id', '=', Auth::user()->id);
-            	});
-        	}
-       });
+        $posts = $user->posts()->ViewableTo(Auth::user())->orderBy('created_at','desc')->paginate(10);
     	
-        $posts = $postsQuery->get();
         $querylog = DB::getQueryLog();
         //Uncomment to see the SQL
-        //dd(end($querylog));
+       // dd(end($querylog));
        
         $isFriend = false;
         
@@ -64,15 +43,18 @@ class UserController extends BaseController {
 	    $data = Input::all();
 	    $validator = Validator::make($data, User::$updateRules);
 	    if($validator->passes()) {
-	        $filename = "na.png";
-	        
             if(Input::hasFile('profile-picture')) {
                 $image = Input::file('profile-picture');
                 
                 $uploadDirectory = public_path().User::$directory.'/'.$data['email'];
                 $filename = $image->getClientOriginalName();
-                File::makeDirectory($uploadDirectory, $mode=0755, $recursive=true);
-                $image->move($uploadDirectory, $filename);
+                if(!File::exists($uploadDirectory)) {
+                    File::makeDirectory($uploadDirectory, $mode=0755, $recursive=true);
+                }
+                if(!File::exists($uploadDirectory.$filename)) {
+                    $image->move($uploadDirectory, $filename);
+                }
+    	        Auth::user()->profile_image = $filename;
             }
             
 	        if(Input::has('fullname')) { Auth::user()->fullname = $data['fullname']; }
@@ -80,7 +62,6 @@ class UserController extends BaseController {
 	        if(Input::has('password')) { Auth::user()->password = Hash::make($data['password']); }
 	        if(Input::has('dob')) { Auth::user()->date_of_birth = $data['dob']; }
 	        
-	        Auth::user()->profile_image = $filename;
 	        
 	        Auth::user()->save();
 	        return Redirect::to('/user/'.Auth::user()->id);
@@ -105,7 +86,10 @@ class UserController extends BaseController {
             
             $uploadDirectory = public_path().User::$directory.'/'.$data['email'];
             $filename = $image->getClientOriginalName();
-            File::makeDirectory($uploadDirectory, $mode=0755, $recursive=true);
+            if(!File::exists($uploadDirectory)) {
+                dd($uploadDirectory);
+                File::makeDirectory($uploadDirectory, $mode=0755, $recursive=true);
+            }
             $image->move($uploadDirectory, $filename);
         }
         

@@ -24,7 +24,29 @@ class Post extends Eloquent {
      * Determine if the post should be displayed, based on privacy settings, for this user.
      */
      function scopeViewableTo($query, $user) {
-        return $postsQuery;
+       return $query->where(function($query) use ($user) {
+               $query = $query->where('privacy_setting','=','global')->orWhere('privacy_setting','public'); 
+               
+            	if(!empty($user)) {
+                	$query = $query
+                	->orWhere(function($query) use ($user) {
+                	    $friendsList = $user->friends->lists('friend_id');
+                	    array_push($friendsList, Auth::user()->id);
+        	    		$query
+        	    		->where('privacy_setting','=','friends')
+        	    		->whereIn('user_id', $friendsList);
+                	});
+            	}
+            	
+            	if(Auth::check()) {
+            	    $query = $query
+                	->orWhere(function($query) {
+                			$query
+            	    		->where('privacy_setting','=','private')
+            	    		->where('user_id', '=', Auth::user()->id);
+                	});
+            	}
+           });
      }
      
      protected $fillable = array('user_id', 'title', 'message', 'privacy_setting');

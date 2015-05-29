@@ -1,30 +1,19 @@
 <?php
 class PostTableSeeder extends Seeder {
     public function run() {
-        Post::create(array(
-        "user_id" => 1,
-        "privacy_setting" => "global",
-        "title" => "who am i",
-        "message" => "i am george"
-        ));
-        Post::create(array(
-        "user_id" => 1,
-        "privacy_setting" => "global",
-        "title" => "who am i????",
-        "message" => "i am GEORGE"
-        ));
-        Post::create(array(
-        "user_id" => 1,
-        "privacy_setting" => "private",
-        "title" => "who are you",
-        "message" => "not george"
-        ));
-        Post::create(array(
-        "user_id" => 2,
-        "privacy_setting" => "friends",
-        "title" => "who am i for a third time",
-        "message" => "i am maybe someone"
-        ));
+        $faker = Faker\Factory::create();
+        
+        for($j = 1; $j <= 10; $j++) {
+            $posts = $faker->numberBetween(0,15);
+            for($i = 0; $i < $posts; $i++) {
+                Post::create([
+                "user_id" => $j,
+                "privacy_setting" => $faker->randomElement(['global','friends','private']),
+                "title" => $faker->sentence(3),
+                "message" => $faker->text(200)
+                ]);
+            }
+        }
     }
 }
 

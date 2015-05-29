@@ -21,6 +21,7 @@
     <div class="row">
         <div class="col-xs-12">
             @if(Auth::check())
+            @if(Auth::user()->id != $otherUser->id)
             @if(!$isFriend)
             {{ Form::open(array('route'=>array('user.friend', $otherUser->id),'method'=>'GET')) }}
             {{ Form::submit('Friend', array('class'=>'btn btn-secondary')) }}
@@ -29,6 +30,7 @@
             {{ Form::submit('Unfriend', array('class'=>'btn btn-secondary')) }}
             @endif
             {{ Form::close() }}
+            @endif
             @endif
         </div>
     </div>
@@ -48,5 +50,10 @@
             </div>
         </div>
     @endforelse
+    <div class="row">
+           <div class="col-sm-12"> 
+        {{ $posts->links() }}
+        </div>
+    </div>
 </div>
 @stop

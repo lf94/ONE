@@ -10,10 +10,10 @@
             <span class="navbar-brand"><a href="{{ URL::asset('/') }}">ONE</a></span>
         </div>
         <div class="collapse navbar-collapse" id="one-nav-collapse">
-            <form class="nav navbar-nav navbar-form navbar-left" action="{{ URL::route('user.search') }}" method="post">
+            {{ Form::open(array('route' => 'user.search', 'class'=>'nav navbar-nav navbar-form navbar-left', 'method'=>'GET')) }}
                 {{ Form::text('person-name', '', array('class' => 'form-control', 'placeholder' => 'Search for people...')) }}
                 {{ Form::submit('Search', array('class' => 'btn btn-secondary')) }}
-            </form>
+            {{ Form::close() }}
             <ul class="nav navbar-nav navbar-right">
                 @yield('nav-items')
                 
@@ -34,7 +34,7 @@
                 @else
                 <li>
                     <a class="" href="{{ URL::route('user.show', Auth::user()->id) }}">
-            <img class="img-rounded btn-img-navbar" src='/2503ict-assign2/public/uploads/users/{{{ Auth::user()->email }}}/{{{ Auth::user()->profile_image }}}' title='N/A' alt='N/A'/> {{{ Auth::user()->fullname }}}
+                        <img class="img-rounded btn-img-navbar" src='/2503ict-assign2/public/uploads/users/{{{ Auth::user()->email }}}/{{{ Auth::user()->profile_image }}}' title='N/A' alt='N/A'/> {{{ Auth::user()->fullname }}}
                     </a>
                 </li>
                 <li>

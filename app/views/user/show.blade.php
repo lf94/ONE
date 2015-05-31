@@ -23,10 +23,10 @@
             @if(Auth::check())
             @if(Auth::user()->id != $otherUser->id)
             @if(!$isFriend)
-            {{ Form::open(array('route'=>array('user.friend', $otherUser->id),'method'=>'GET')) }}
+            {{ Form::open(array('route'=>array('user.friend', $otherUser->id),'method'=>'PUT')) }}
             {{ Form::submit('Friend', array('class'=>'btn btn-secondary')) }}
             @else
-            {{ Form::open(array('route'=>array('user.unfriend', $otherUser->id),'method'=>'GET')) }}
+            {{ Form::open(array('route'=>array('user.unfriend', $otherUser->id),'method'=>'DELETE')) }}
             {{ Form::submit('Unfriend', array('class'=>'btn btn-secondary')) }}
             @endif
             {{ Form::close() }}

@@ -23,7 +23,7 @@
 @if($post->comments()->count() > 0)
 <div class="col-sm-12 comments"><a href="{{ URL::route('post.show', $post->id) }}">View {{{ $post->comments()->count() }}} comments</a><br/></div>
 @else
-<div class="col-sm-12">No comments. <a href="" class="btn btn-link">Be the first.</a><br/></div>
+<div class="col-sm-12">No comments. <a href="{{ URL::route('post.show', $post->id) }}" class="btn btn-link">Be the first.</a><br/></div>
 @endif
 @endif
 

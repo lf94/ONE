@@ -12,13 +12,13 @@ Login
 
 @section('content')
 <div class="col-sm-12">
-{{ Form::model($user, array('route'=>'user.login', 'files'=>'true')) }}
+{{ Form::open(array('route'=>'user.login', 'files'=>'true')) }}
     <div class="form-group">
-        <label for="name">Name: {{{ $errors->first('name') }}}</label>
-        <input type="text" name="name" class="form-control" placeholder="Enter your account's name here"/>
+        <label for="email">Email: {{{ $errors->first('email') }}}</label>
+        <input type="text" name="email" class="form-control" placeholder="Enter your account's email here"/>
     </div>
     <div class="form-group">
-        <label for="passowrd">Password: {{{ $errors->first('name') }}}</label>
+        <label for="password">Password: {{{ $errors->first('password') }}}</label>
         <input type="password" name="password" class="form-control" placeholder=""/>
     </div>
     <input type="submit" class="btn btn-primary" value="Login"/>

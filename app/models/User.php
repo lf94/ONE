@@ -30,7 +30,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		'email'=>'required|email|unique:users',
 		'password'=>'required',
 		'fullname'=>'required',
-		'dob'=>'required|date'
+		'birthday'=>'required|date'
 	);
 	
 	public static $loginRules = [
@@ -40,7 +40,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	
 	public static $updateRules = [
 		'email'=>'email',
-		'dob'=>'date'
+		'birthday'=>'date'
 	];
 	
 	public static $directory = '/uploads/users';

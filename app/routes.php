@@ -31,10 +31,11 @@ Route::get('logout', array("as" => "user.logout", "uses" => "UserController@logo
 Route::get('search', array("as" => "user.search", "uses" => "UserController@search"));
 
 Route::get('user/{id}/friends', array("as" => "user.friends", "uses" => "UserController@friends"));
-Route::get('user/friend/{id}', array("as" => "user.friend", "uses" => "UserController@friend"));
-Route::get('user/unfriend/{id}', array("as" => "user.unfriend", "uses" => "UserController@unfriend"));
+Route::put('user/friend/{id}', array("as" => "user.friend", "uses" => "UserController@friend"));
+Route::delete('user/unfriend/{id}', array("as" => "user.unfriend", "uses" => "UserController@unfriend"));
 
 Route::resource('post', 'PostController');
 Route::resource('comment', 'CommentController');
 Route::resource('user', 'UserController');
+
 ?>

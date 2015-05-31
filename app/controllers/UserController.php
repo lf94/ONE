@@ -60,7 +60,7 @@ class UserController extends BaseController {
 	        if(Input::has('fullname')) { Auth::user()->fullname = $data['fullname']; }
 	        if(Input::has('email')) { Auth::user()->email = $data['email']; }
 	        if(Input::has('password')) { Auth::user()->password = Hash::make($data['password']); }
-	        if(Input::has('dob')) { Auth::user()->date_of_birth = $data['dob']; }
+	        if(Input::has('birthday')) { Auth::user()->date_of_birth = $data['birthday']; }
 	        
 	        
 	        Auth::user()->save();
@@ -92,14 +92,17 @@ class UserController extends BaseController {
             $image->move($uploadDirectory, $filename);
         }
         
+        $password = Hash::make($data['password']);
+        
         User::create(array(
             'email'=>$data['email'], 
-            'password'=>Hash::make($data['password']),
+            'password'=>$password,
             'fullname'=>$data['fullname'],
-            'date_of_birth'=>$data['dob'],
+            'date_of_birth'=>$data['birthday'],
             'profile_image'=>$filename
         ));
         
+		Auth::attempt(array('email' => $data['email'], 'password' => $password), true);
         return Redirect::to("/");
        }
       
@@ -123,10 +126,10 @@ class UserController extends BaseController {
 		$success = Auth::attempt(array('email' => $email, 'password' => $password), true);
 		
 		if($success) {
-			return Redirect::to(URL::previous());
+			return Redirect::route('home.home');
 		}
 		
-		return Redirect::route('user.login');
+		return Redirect::route('user.login')->withErrors(true);
     }
     
     /**

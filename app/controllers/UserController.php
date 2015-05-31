@@ -29,12 +29,17 @@ class UserController extends BaseController {
            ->with('posts', $posts);
     }
     
-    
+    /**
+     * Display a form to modify the user's information.
+     */
 	public function edit($id)
 	{
 		return View::make('user/edit')->withUser(Auth::user());
 	}
-	
+
+    /**
+     * Update a user's information.
+     */
 	public function update($id) {
 	    if($id != Auth::user()->id) {
 	        return Redirect::back();
@@ -43,20 +48,28 @@ class UserController extends BaseController {
 	    $data = Input::all();
 	    $validator = Validator::make($data, User::$updateRules);
 	    if($validator->passes()) {
+	        
+	        /* Check to see if the user is uploading a profile picture. */
             if(Input::hasFile('profile-picture')) {
                 $image = Input::file('profile-picture');
-                
+               
+                /* Make sure the user's directory doesn't already exist. */ 
                 $uploadDirectory = public_path().User::$directory.'/'.$data['email'];
                 $filename = $image->getClientOriginalName();
                 if(!File::exists($uploadDirectory)) {
                     File::makeDirectory($uploadDirectory, $mode=0755, $recursive=true);
                 }
+                
+                /* Make sure the user's image doesn't already exist. */
                 if(!File::exists($uploadDirectory.$filename)) {
                     $image->move($uploadDirectory, $filename);
                 }
+                
+                
     	        Auth::user()->profile_image = $filename;
             }
-            
+           
+           /* Only update information that has been provided. */ 
 	        if(Input::has('fullname')) { Auth::user()->fullname = $data['fullname']; }
 	        if(Input::has('email')) { Auth::user()->email = $data['email']; }
 	        if(Input::has('password')) { Auth::user()->password = Hash::make($data['password']); }
@@ -80,7 +93,8 @@ class UserController extends BaseController {
        if($validator->passes()) {
        
         $filename = "na.png";
-        
+       
+       /* Check to make sure the profile picture is being uploaded, and make sure their upload directory exists. */ 
         if(Input::hasFile('profile-picture')) {
             $image = Input::file('profile-picture');
             
@@ -91,7 +105,8 @@ class UserController extends BaseController {
             }
             $image->move($uploadDirectory, $filename);
         }
-        
+       
+       /* Create the user. */ 
         $password = Hash::make($data['password']);
         
         User::create(array(
@@ -101,7 +116,8 @@ class UserController extends BaseController {
             'date_of_birth'=>$data['birthday'],
             'profile_image'=>$filename
         ));
-        
+       
+       /* Login the newly created user. */ 
 		Auth::attempt(array('email' => $data['email'], 'password' => $data['password']), true);
         return Redirect::to("/");
        }
@@ -129,7 +145,7 @@ class UserController extends BaseController {
 			return Redirect::route('home.home');
 		}
 		
-		return Redirect::route('user.login')->withErrors(true);
+		return View::make('user.login')->withMessage(true);
     }
     
     /**
@@ -158,17 +174,8 @@ class UserController extends BaseController {
             $friend = Friend::where('user_id', Auth::user()->id)->where('friend_id',$id)->count();
             
             if($friend == 0) {
-                /* I tried with Friend::create(...), no go... */
-                
-                $friendObj = new Friend();
-                $friendObj->user_id = Auth::user()->id;
-                $friendObj->friend_id = $id;
-                $friendObj->save();
-                
-                $friendObj = new Friend();
-                $friendObj->friend_id = Auth::user()->id;
-                $friendObj->user_id = $id;
-                $friendObj->save();
+                Friend::create(['user_id'=> Auth::user()->id, 'friend_id'=>$id]);
+                Friend::create(['friend_id'=> Auth::user()->id, 'user_id'=>$id]);
             }
         }
         return Redirect::to(URL::previous());

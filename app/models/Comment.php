@@ -19,12 +19,14 @@ class Comment extends Eloquent {
         return $this->belongsTo('Post');
     }
     
+    protected $fillable = ["post_id","user_id","message"];
+    
+    /* Form rules */
+    
     public static $rules = [
         "post_id"=>"required",
         'message'=>'required'
     ];
-    
-    protected $fillable = ["post_id","user_id","message"];
     
 }
 

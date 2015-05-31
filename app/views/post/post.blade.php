@@ -34,6 +34,7 @@
 <div class="row">
 @forelse($comments as $comment)
     <div class="col-sm-11 comment">
+        <img class="img-thumbnail" src='/2503ict-assign2/public/uploads/users/{{{ $comment->user->email }}}/{{{ $comment->user->profile_image }}}' width="64" height="64" title='N/A' alt='N/A'/>
         <a href="{{ URL::to('/user/'.$comment->user->id) }}">{{{ $comment->user->fullname }}}</a> says: {{{ $comment->message }}}
     </div>
     <div class="col-sm-1 comment-modifier">

@@ -26,6 +26,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 	
+	/* Rules for several different kinds of forms. */
 	public static $rules = array(
 		'email'=>'required|email|unique:users',
 		'password'=>'required',
@@ -42,10 +43,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		'email'=>'email',
 		'birthday'=>'date'
 	];
-	
+
+	/* Directory related constants. */	
 	public static $directory = '/uploads/users';
 	public static $profilePicture = 'profile-picture';
-	
+
+	/* Eloquent variables */	
 	protected $fillable = array('email','password','fullname','date_of_birth','profile_image');
 	
 	public function friends() {

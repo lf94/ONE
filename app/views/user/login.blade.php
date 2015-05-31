@@ -12,6 +12,13 @@ Login
 
 @section('content')
 <div class="col-sm-12">
+    
+@if(isset($message))
+<div class="form-group has-warning">
+    <label>Invalid credentials.</label>
+</div>
+@endif
+
 {{ Form::open(array('route'=>'user.login', 'files'=>'true')) }}
     <div class="form-group">
         <label for="email">Email: {{{ $errors->first('email') }}}</label>

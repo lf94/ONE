@@ -3,6 +3,10 @@
 use Illuminate\Support\Collection;
 
 class HomeController extends BaseController {
+	
+	/**
+	 * Show all the posts (based on privacy) from the newest to oldest.
+	 */
 	public function home() {
         $posts = Post::ViewableTo(Auth::user())->orderBy('created_at', 'desc')->paginate(10); 
         

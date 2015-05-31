@@ -22,6 +22,9 @@ class Post extends Eloquent {
     
     /**
      * Determine if the post should be displayed, based on privacy settings, for this user.
+     * @param $query A QueryBuilder object.
+     * @param $user Verify if this user can view certain posts.
+     * @return A QueryBuilder object.
      */
      function scopeViewableTo($query, $user) {
        return $query->where(function($query) use ($user) {
@@ -49,6 +52,10 @@ class Post extends Eloquent {
            });
      }
      
+     /**
+      * Get the corresponding icons for privacy settings.
+      * @return The HTML for the icon.
+      */
      public function privacyIcon() {
          switch($this->privacy_setting) {
              case "public":
@@ -57,14 +64,15 @@ class Post extends Eloquent {
              case "friends":
                  return "<span class='glyphicon glyphicon-user'></span>";
              case "private":
-                 return "<span class='gyphicon glyphicon-ban-circle'></span>";
+                 return "<span class='glyphicon glyphicon-ban-circle'></span>";
          }
          
          return "";
      }
      
      protected $fillable = array('user_id', 'title', 'message', 'privacy_setting');
-     
+    
+    /* Form fields. */ 
      public static $rules = [
 		    "title" => "required",
 		    "message" => "required",

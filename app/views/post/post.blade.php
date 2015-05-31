@@ -8,6 +8,9 @@
     @endif
     @endif
 </div>
+<div class="privacy">
+    {{ $post->privacyIcon() }}
+</div>
 <div class="col-sm-3 poster">
     <img class="img-thumbnail" src='/2503ict-assign2/public/uploads/users/{{{ $post->user->email }}}/{{{ $post->user->profile_image }}}' width="128" height="128" title='N/A' alt='N/A'/>
     <div><a href="{{ URL::route('user.show', $post->user->id) }}">{{{ $post->user->fullname }}}</a></div>

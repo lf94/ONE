@@ -102,7 +102,7 @@ class UserController extends BaseController {
             'profile_image'=>$filename
         ));
         
-		Auth::attempt(array('email' => $data['email'], 'password' => $password), true);
+		Auth::attempt(array('email' => $data['email'], 'password' => $data['password']), true);
         return Redirect::to("/");
        }
       

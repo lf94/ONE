@@ -49,6 +49,20 @@ class Post extends Eloquent {
            });
      }
      
+     public function privacyIcon() {
+         switch($this->privacy_setting) {
+             case "public":
+             case "global":
+                 return "<span class='glyphicon glyphicon-globe'></span>";
+             case "friends":
+                 return "<span class='glyphicon glyphicon-user'></span>";
+             case "private":
+                 return "<span class='gyphicon glyphicon-ban-circle'></span>";
+         }
+         
+         return "";
+     }
+     
      protected $fillable = array('user_id', 'title', 'message', 'privacy_setting');
      
      public static $rules = [

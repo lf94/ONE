@@ -34,6 +34,12 @@
             @endif
         </div>
     </div>
+    <br/>
+    <div class="row">
+        <div class="col-xs-12">
+            <a href="{{ URL::route('user.friends', $otherUser->id) }}"><span class="glyphicon glyphicon-user"></span> Friends</a>
+        </div>
+    </div>
 </div>
 @stop
 
